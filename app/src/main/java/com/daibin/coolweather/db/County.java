@@ -2,16 +2,15 @@ package com.daibin.coolweather.db;
 
 import org.litepal.crud.DataSupport;
 
-/**
- * Created by DaiBin on 2018/11/19.
- */
-
 public class County extends DataSupport {
+
     private int id;
 
     private String countyName;
 
-    private String weatherid;
+    private String weatherId;
+
+    private int cityId;
 
     public int getId() {
         return id;
@@ -29,11 +28,20 @@ public class County extends DataSupport {
         this.countyName = countyName;
     }
 
-    public String getWeatherid() {
-        return weatherid;
+    public String getWeatherId() {
+        return weatherId;
     }
 
-    public void setWeatherid(String weatherid) {
-        this.weatherid = weatherid;
+    public void setWeatherId(String weatherId) {
+        this.weatherId = weatherId;
     }
+
+    public int getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
+    }
+
 }

@@ -1,9 +1,10 @@
 package com.daibin.coolweather;
 
 import android.app.ProgressDialog;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ import okhttp3.Response;
 
 public class ChooseAreaFragment extends Fragment {
 
-    //private static final String TAG = "ChooseAreaFragment";
+    private static final String TAG = "ChooseAreaFragment";
 
     public static final int LEVEL_PROVINCE = 0;
 
@@ -107,6 +108,14 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
                     queryCounties();
+                } else if (currentLevel == LEVEL_COUNTY) {
+                    String weatherId = countyList.get(position).getWeatherId();
+                    if (getActivity() instanceof MainActivity) {
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id", weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                  }
                 }
             }
         });
@@ -131,8 +140,6 @@ public class ChooseAreaFragment extends Fragment {
         backButton.setVisibility(View.GONE);
         provinceList = DataSupport.findAll(Province.class);
         if (provinceList.size() > 0) {
-
-            Log.d("ChooseAreaFragment","from DataBase");
             dataList.clear();
             for (Province province : provinceList) {
                 dataList.add(province.getProvinceName());
@@ -141,7 +148,6 @@ public class ChooseAreaFragment extends Fragment {
             listView.setSelection(0);
             currentLevel = LEVEL_PROVINCE;
         } else {
-            Log.d("ChooseAreaFragment","from Web");
             String address = "http://guolin.tech/api/china";
             queryFromServer(address, "province");
         }
@@ -262,16 +268,3 @@ public class ChooseAreaFragment extends Fragment {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

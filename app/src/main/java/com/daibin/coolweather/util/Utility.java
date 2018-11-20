@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import com.daibin.coolweather.db.City;
 import com.daibin.coolweather.db.County;
 import com.daibin.coolweather.db.Province;
+import com.daibin.coolweather.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,7 +81,7 @@ public class Utility {
                     County county = new County();
                     county.setCountyName(countyObject.getString("name"));
                     county.setWeatherId(countyObject.getString("weather_id"));
-                    county.setId(cityId);
+                    county.setCityId(cityId);
                     county.save();
                 }
 
@@ -95,6 +97,19 @@ public class Utility {
 
 
 
+    public static Weather handleWeatherResponse(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            return  new Gson().fromJson(weatherContent,Weather.class);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return  null;
+    }
 
 
 

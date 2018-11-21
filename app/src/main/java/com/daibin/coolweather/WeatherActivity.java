@@ -65,6 +65,8 @@ public class WeatherActivity extends AppCompatActivity {
 
     private Button navButton;
 
+    private String mWeatherId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,21 +110,21 @@ public class WeatherActivity extends AppCompatActivity {
 
         SharedPreferences perfs = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = perfs.getString("weather", null);
-        final String weatherId;
+        //final String weatherId;
         if(weatherString != null){
             Weather weather = Utility.handleWeatherResponse(weatherString);
-            weatherId = weather.basic.weatherId;
+            mWeatherId = weather.basic.weatherId;
             showWeatherInfo(weather);
         }else {
-            weatherId = getIntent().getStringExtra("weather_id");
+            mWeatherId = getIntent().getStringExtra("weather_id");
             weatherLayout.setVisibility(View.INVISIBLE);
-            requestWeather(weatherId);
+            requestWeather(mWeatherId);
         }
 
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestWeather(weatherId);
+                requestWeather(mWeatherId);
             }
         });
 
@@ -170,12 +172,15 @@ public class WeatherActivity extends AppCompatActivity {
     public void requestWeather(final String weatherId){
         String weatherUrl= "http://guolin.tech/api/weather?cityid=" + weatherId + "&key=9aabfc1b70bb4c1288b4bc1f00e13f1a";
         Log.d("requestWeather",weatherUrl);
+        mWeatherId = weatherId;
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String responseText = response.body().string();
                 final Weather weather = Utility.handleWeatherResponse(responseText);
+
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

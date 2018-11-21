@@ -1,5 +1,6 @@
 package com.daibin.coolweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.daibin.coolweather.gson.Forecast;
 import com.daibin.coolweather.gson.Weather;
+import com.daibin.coolweather.service.AutoUpdateService;
 import com.daibin.coolweather.util.HttpUtil;
 import com.daibin.coolweather.util.Utility;
 
@@ -211,7 +213,6 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
 
-
     private void showWeatherInfo(Weather weather){
         String cityName = weather.basic.cityName;
         String updateTime = weather.basic.update.updateTime.split(" ")[1];
@@ -254,5 +255,13 @@ public class WeatherActivity extends AppCompatActivity {
         weatherLayout.setVisibility(View.VISIBLE);
 
 
+        if(weather != null && "ok".equals(weather.status)){
+            Intent intent = new Intent(this, AutoUpdateService.class);
+            startService(intent);
+        }else{
+            Toast.makeText(WeatherActivity.this,"request weather infomation failure",Toast.LENGTH_SHORT).show();
+        }
+
     }
+
 }
